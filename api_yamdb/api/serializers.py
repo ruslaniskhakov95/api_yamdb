@@ -38,20 +38,10 @@ class TitleSerializer(serializers.ModelSerializer):
         required=False,
         slug_field='slug',
     )
-    rating = serializers.IntegerField(read_only=True)
 
     class Meta:
         model = Title
         fields = ('name', 'year', 'description', 'genre', 'rating', 'category')
 
-    def to_representation(self, instance):
-        representation = super().to_representation(instance)
-        representation['genre'] = GenreSerializer(
-            instance=instance.genre,
-            read_only=True, many=True
-        ).data
-        representation['category'] = CategorySerializer(
-            instance=instance.category,
-            read_only=True
-        ).data
-        return representation
+    def to_representation(self, value):
+        return TitleGETSerializer(value).data
