@@ -1,3 +1,8 @@
-from django.shortcuts import render
+from api.mixins import CategoryGengeMixin
+from api.serializers import GenreSerializer
+from reviews.models import Genre
 
-# Create your views here.
+
+class GenreViewSet(CategoryGengeMixin):
+    serializer_class = GenreSerializer
+    queryset = Genre.objects.all()
