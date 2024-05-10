@@ -1,13 +1,13 @@
 from rest_framework import serializers
 
-from reviews.models import Review
+from reviews.models import Review, User
 
 
 class ReviewSerializer(serializers.ModelSerializer):
     author = serializers.SlugRelatedField(
         slug_field='username',
         read_only=True,
-        default=serializers.CurrentUserDefault()
+        queryset=User.objects.all()
     )
 
     class Meta:
