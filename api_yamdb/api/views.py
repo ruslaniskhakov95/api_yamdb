@@ -1,9 +1,15 @@
 from django.shortcuts import get_object_or_404
-from rest_framework import viewsets
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import viewsets, permissions
+from rest_framework.pagination import LimitOffsetPagination
 
-from reviews.models import Title
-from .serializers import ReviewSerializer
-from .permissions import IsAuthorOrReadOnly
+from api.filters import TitleFilter
+from api.mixins import CategoryGengeMixin
+from reviews.models import Genre, Title, Category
+from .serializers import (ReviewSerializer, GenreSerializer,
+                          TitleSerializer, TitleGETSerializer,
+                          CategorySerializer)
+from .permissions import (IsAuthorOrReadOnly, IsAdminOrReadOnly)
 
 
 class ReviewViewSet(viewsets.ModelViewSet):
@@ -21,3 +27,28 @@ class ReviewViewSet(viewsets.ModelViewSet):
             title_id=title.id,
             author_id=self.request.user.id
         )
+
+
+class CategoryViewSet(CategoryGengeMixin):
+    serializer_class = CategorySerializer
+    queryset = Category.objects.all()
+
+
+class GenreViewSet(CategoryGengeMixin):
+    serializer_class = GenreSerializer
+    queryset = Genre.objects.all()
+
+
+class TitleViewSet(viewsets.ModelViewSet):
+    queryset = (
+        Title.objects.all()
+    )
+    permission_classes = (IsAdminOrReadOnly,)
+    pagination_class = LimitOffsetPagination
+    filter_backends = (DjangoFilterBackend,)
+    filterset_class = TitleFilter
+
+    def get_serializer_class(self):
+        if self.request.method in permissions.SAFE_METHODS:
+            return TitleGETSerializer
+        return TitleSerializer
