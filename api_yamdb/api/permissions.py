@@ -2,7 +2,6 @@ from rest_framework import permissions
 
 
 class IsAdminOrReadOnly(permissions.BasePermission):
-
     """
     Обеспечивает доступ администратору, всем остальным только безопасные методы.
     """

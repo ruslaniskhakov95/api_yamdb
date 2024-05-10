@@ -5,8 +5,13 @@ from rest_framework.pagination import LimitOffsetPagination
 from api.filters import TitleFilter
 from api.mixins import CategoryGengeMixin
 from api.permissions import (IsAdminOrReadOnly,)
-from api.serializers import GenreSerializer, TitleSerializer, TitleGETSerializer,
-from reviews.models import Genre, Title
+from api.serializers import GenreSerializer, TitleSerializer, TitleGETSerializer, CategorySerializer
+from reviews.models import Genre, Title, Category
+
+
+class CategoryViewSet(CategoryGengeMixin):
+    serializer_class = CategorySerializer
+    queryset = Category.objects.all()
 
 
 class GenreViewSet(CategoryGengeMixin):
