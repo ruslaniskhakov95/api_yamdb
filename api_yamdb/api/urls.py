@@ -1,13 +1,18 @@
-from django.urls import include, path
+from django.urls import path, include
+from rest_framework.routers import SimpleRouter
 
-from api.views import TitleViewSet, GenreViewSet, CategoryViewSet
+from .views import ReviewViewSet, TitleViewSet, GenreViewSet, CategoryViewSet
 
 
-v1_router.register('titles', TitleViewSet, basename='titles')
-v1_router.register('genres', GenreViewSet, basename='genres')
-v1_router.register('categories', CategoryViewSet, basename='categories')
+router_api_v1 = SimpleRouter()
+
+router_api_v1.register(
+    r'title/(?P<title_id>\d+)/reviews', ReviewViewSet, basename='reviews')
+router_api_v1.register('titles', TitleViewSet, basename='titles')
+router_api_v1.register('genres', GenreViewSet, basename='genres')
+router_api_v1.register('categories', CategoryViewSet, basename='categories')
 
 
 urlpatterns = [
-    path('v1/', include(v1_router.urls)),
+    path('', include(router_api_v1.urls)),
 ]
