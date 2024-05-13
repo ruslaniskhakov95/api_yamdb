@@ -1,6 +1,6 @@
-from rest_framework import serializers
+from rest_framework import serializers, validators
 
-from reviews.models import Review, User, Category, Genre, Title
+from reviews.models import Review, Category, Genre, Title, Comment
 from reviews.constants import MAX_NAME_LENGTH, MAX_SLUG_LENGTH
 from reviews.validators import validate_year
 
@@ -9,12 +9,24 @@ class ReviewSerializer(serializers.ModelSerializer):
     author = serializers.SlugRelatedField(
         slug_field='username',
         read_only=True,
-        queryset=User.objects.all()
+        default=serializers.CurrentUserDefault()
     )
 
     class Meta:
         model = Review
         fields = ('id', 'text', 'author', 'score', 'pub_date')
+
+
+class CommentSerializer(serializers.ModelSerializer):
+    author = serializers.SlugRelatedField(
+        slug_field='username',
+        read_only=True,
+        default=serializers.CuurentUserDefault
+    )
+
+    class Meta:
+        model = Comment
+        fields = ('id', 'text', 'author', 'pub_date')
 
 
 class CategorySerializer(serializers.ModelSerializer):
