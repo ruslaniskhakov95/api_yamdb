@@ -65,8 +65,8 @@ class Title(models.Model):
     )
     genre = models.ManyToManyField(
         Genre,
+        through='GenreTitle',
         verbose_name='Slug жанра',
-        related_name='titles',
         blank=True
     )
     category = models.ForeignKey(
@@ -86,6 +86,29 @@ class Title(models.Model):
 
     def __str__(self):
         return self.name[:LIMIT_TEXT]
+
+
+class GenreTitle(models.Model):
+    title = models.ForeignKey(
+        Title,
+        on_delete=models.CASCADE,
+        null=True,
+        verbose_name='Название произведения',
+    )
+    genre = models.ForeignKey(
+        Genre,
+        on_delete=models.SET_NULL,
+        null=True,
+        verbose_name='Жанр произведения',
+    )
+
+    class Meta:
+        verbose_name = 'Произведение - Жанр'
+        verbose_name_plural = 'Произведение - Жанр'
+        ordering = ['title__name']
+
+    def __str__(self):
+        return f'Произведение {self.title_id} - Жанр {self.genre_id}'
 
 
 class Review(models.Model):
