@@ -1,4 +1,4 @@
-from rest_framework import serializers
+from rest_framework import serializers, validators
 
 from reviews.models import Review, User, Category, Genre, Title
 from reviews.constants import MAX_NAME_LENGTH, MAX_SLUG_LENGTH
@@ -64,17 +64,13 @@ class TitleGETSerializer(serializers.ModelSerializer):
     )
     genre = GenreSerializer(many=True, read_only=True)
     category = CategorySerializer(read_only=True)
-    rating = serializers.SerializerMethodField()
+    rating = serializers.IntegerField(read_only=True)
 
     class Meta:
         model = Title
         fields = ('id', 'name', 'year', 'rating',
                   'description', 'genre', 'category')
         read_only_fields = ('id',)
-
-    def get_rating(self, obj):
-        reviews = [review.rating for review in obj.reviews.all()]
-        return sum(reviews) / len(reviews)
 
 
 class TitleSerializer(serializers.ModelSerializer):
