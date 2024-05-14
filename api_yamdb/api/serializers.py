@@ -12,15 +12,15 @@ class ReviewSerializer(serializers.ModelSerializer):
         default=serializers.CurrentUserDefault()
     )
 
-    class Meta:
-        model = Review
-        fields = ('id', 'text', 'author', 'score', 'pub_date')
-
     def validate(self, data):
         author = data.get('author')
         if Review.objects.filter(author=author).exists():
             raise validators.ValidationError('Автор уже оставил свой отзыв!')
         return data
+
+    class Meta:
+        model = Review
+        fields = ('id', 'text', 'author', 'score', 'pub_date')
 
 
 class CommentSerializer(serializers.ModelSerializer):
