@@ -10,12 +10,12 @@ from reviews.models import Genre, Title, Category, Review
 from .serializers import (ReviewSerializer, GenreSerializer,
                           TitleSerializer, TitleGETSerializer,
                           CategorySerializer, CommentSerializer)
-from .permissions import (IsAuthorAdminModeratorOrReadOnly, IsAdminOrReadOnly)
+from users.permissions import (IsOwnerOrReadOnly, IsAdminOrReadOnly)
 
 
 class ReviewViewSet(viewsets.ModelViewSet):
     serializer_class = ReviewSerializer
-    permission_classes = [IsAuthorAdminModeratorOrReadOnly]
+    permission_classes = [IsOwnerOrReadOnly]
 
     def get_queryset(self):
         title = get_object_or_404(Title, id=self.kwargs.get('title_id'))
@@ -32,7 +32,7 @@ class ReviewViewSet(viewsets.ModelViewSet):
 
 class CommentViewSet(viewsets.ModelViewSet):
     serializer_class = CommentSerializer
-    permission_classes = [IsAuthorAdminModeratorOrReadOnly]
+    permission_classes = [IsOwnerOrReadOnly]
 
     def get_queryset(self):
         title = get_object_or_404(Title, id=self.kwargs.get('title_id'))
@@ -50,11 +50,13 @@ class CommentViewSet(viewsets.ModelViewSet):
 class CategoryViewSet(CategoryGengeMixin):
     serializer_class = CategorySerializer
     queryset = Category.objects.all()
+    permission_classes = [IsAdminOrReadOnly]
 
 
 class GenreViewSet(CategoryGengeMixin):
     serializer_class = GenreSerializer
     queryset = Genre.objects.all()
+    permission_classes = [IsAdminOrReadOnly]
 
 
 class TitleViewSet(viewsets.ModelViewSet):
