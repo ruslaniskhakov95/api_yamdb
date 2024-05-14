@@ -81,9 +81,8 @@ python manage.py runserver
 "slug": "^-$"
 }
 }
-
-3) Удаление категории: DELETE http://127.0.0.1:8000/api/v1/categories/{slug}/
 ```
+3) Удаление категории: DELETE http://127.0.0.1:8000/api/v1/categories/{slug}/
 
 
 ## Запуск тестов:
