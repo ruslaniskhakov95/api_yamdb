@@ -89,6 +89,7 @@ python manage.py runserver
 pytest
 
 
+#### Команда № 3:
 ```
 Руслан Исхаков - team lead
 Виктория Финкель
