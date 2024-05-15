@@ -4,9 +4,9 @@ from django.db import models
 from .validators import username_validator
 
 CHOICES = [
-    ('User', 'Пользователь'),
-    ('Admin', 'Администратор'),
-    ('Moderator', 'Модератор'),
+    ('user', 'Пользователь'),
+    ('admin', 'Администратор'),
+    ('moderator', 'Модератор'),
 ]
 
 
@@ -30,8 +30,8 @@ class MyUser(AbstractUser):
 
     @property
     def is_admin(self):
-        return self.role == 'Admin' or self.is_staff or self.is_superuser
+        return self.role == 'admin' or self.is_staff or self.is_superuser
 
     @property
     def is_moderator(self):
-        return self.role == 'Moderator'
+        return self.role == 'moderator'
