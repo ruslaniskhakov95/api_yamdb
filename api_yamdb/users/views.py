@@ -17,7 +17,7 @@ from .serializers import (CustomUserSerializer, GetTokenSerializer,
 
 
 class CustomUserViewSet(viewsets.ModelViewSet):
-
+    http_method_names = ['get', 'post', 'patch', 'delete']
     queryset = MyUser.objects.all()
     serializer_class = CustomUserSerializer
     permission_classes = (IsAdmin,)
@@ -38,7 +38,7 @@ class CustomUserViewSet(viewsets.ModelViewSet):
             serializer = CustomUserSerializer(user, data=request.data,
                                               partial=True)
             serializer.is_valid(raise_exception=True)
-            serializer.save()
+            serializer.save(role=user.role)
             return Response(serializer.data, status=status.HTTP_200_OK)
 
 
