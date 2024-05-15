@@ -17,10 +17,7 @@ class ReviewViewSet(viewsets.ModelViewSet):
     serializer_class = ReviewSerializer
     pagination_class = LimitOffsetPagination
     permission_classes = [IsOwnerOrReadOnly]
-    http_method_names = [
-        'get', 'post', 'patch',
-        'delete', 'options', 'head', 'trace'
-        ]
+    http_method_names = ['get', 'post', 'patch', 'delete']
 
     def get_queryset(self):
         title = get_object_or_404(Title, id=self.kwargs.get('title_id'))
@@ -40,10 +37,7 @@ class CommentViewSet(viewsets.ModelViewSet):
     serializer_class = CommentSerializer
     pagination_class = LimitOffsetPagination
     permission_classes = [IsOwnerOrReadOnly]
-    http_method_names = [
-        'get', 'post', 'patch',
-        'delete', 'options', 'head', 'trace'
-        ]
+    http_method_names = ['get', 'post', 'patch', 'delete']
 
     def get_queryset(self):
         title = get_object_or_404(Title, id=self.kwargs.get('title_id'))
@@ -72,10 +66,7 @@ class GenreViewSet(CategoryGengeMixin):
 
 class TitleViewSet(viewsets.ModelViewSet):
     queryset = Title.objects.annotate(rating=Avg('reviews__score'))
-    http_method_names = [
-        'get', 'post', 'patch',
-        'delete', 'options', 'head', 'trace'
-        ]
+    http_method_names = ['get', 'post', 'patch', 'delete']
     permission_classes = (IsAdminOrReadOnly,)
     pagination_class = LimitOffsetPagination
     filter_backends = (DjangoFilterBackend,)
