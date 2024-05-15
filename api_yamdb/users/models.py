@@ -14,11 +14,11 @@ class MyUser(AbstractUser):
     username = models.CharField('username', max_length=150, unique=True,
                                 validators=[username_validator])
     email = models.EmailField('email', max_length=254, unique=True,)
-    first_name = models.CharField('Имя', max_length=150,)
-    last_name = models.CharField('Фамилия', max_length=150,)
+    first_name = models.CharField('Имя', max_length=150, blank=True)
+    last_name = models.CharField('Фамилия', max_length=150, blank=True)
     bio = models.TextField('Биография', blank=True,)
     role = models.CharField('Роль', max_length=50, choices=CHOICES,
-                            default='User', blank=True,)
+                            default='user', blank=True,)
     confirmation_code = models.CharField(max_length=254, blank=True,)
 
     class Meta:

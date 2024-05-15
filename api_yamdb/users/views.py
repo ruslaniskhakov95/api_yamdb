@@ -50,13 +50,18 @@ class SignUpView(views.APIView):
         serializer.is_valid(raise_exception=True)
         email = serializer.data['email']
         username = serializer.validated_data['username']
-        try:
-            user = MyUser.objects.create_user(email=email, username=username)
-            token = default_token_generator.make_token(user)
-            user.confirmation_code = token
-            user.save()
-        except ValidationError as error:
-            return Response(error.detail, status=status.HTTP_400_BAD_REQUEST)
+        if serializer.data.get('confirmation_code') is None:
+            try:
+                user = MyUser.objects.create_user(
+                    email=email, username=username
+                )
+            except ValidationError as error:
+                return Response(
+                    error.detail, status=status.HTTP_400_BAD_REQUEST
+                )
+        token = default_token_generator.make_token(user)
+        user.confirmation_code = token
+        user.save()
         confirmation_message = f'Ваш код подтверждения {token}'
         send_mail(
             'Код подтверждения',

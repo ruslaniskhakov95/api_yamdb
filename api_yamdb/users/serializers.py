@@ -37,8 +37,17 @@ class SingUpSerializer(serializers.ModelSerializer):
     def validate(self, data):
         username = data.get('username')
         email = data.get('email')
-        if MyUser.objects.filter(username=username).exists():
-            raise ValidationError('Пользователь с таким именем уже существует')
-        if MyUser.objects.filter(email=email).exists():
-            raise ValidationError('Пользователь с такой почтой уже существует')
+        confirmation_code = data.get('confirmation_code')
+        if confirmation_code and MyUser.objects.filter(
+            username=username, email=email
+        ).exists():
+            return data
+        elif MyUser.objects.filter(username=username).exists():
+            raise ValidationError(
+                'Пользователь с таким именем уже существует'
+                )
+        elif MyUser.objects.filter(email=email).exists():
+            raise ValidationError(
+                'Пользователь с такой почтой уже существует'
+                )
         return data
