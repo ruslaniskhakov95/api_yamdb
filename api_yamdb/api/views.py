@@ -29,11 +29,11 @@ class ReviewViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         title_id = self.kwargs.get('title_id')
         title = get_object_or_404(Title, id=title_id)
+        serializer.is_valid(raise_exception=True)
         serializer.save(
             title_id=title.id,
             author_id=self.request.user.id
         )
-        serializer.is_valid(raise_exception=True)
 
 
 class CommentViewSet(viewsets.ModelViewSet):
