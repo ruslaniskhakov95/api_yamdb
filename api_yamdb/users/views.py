@@ -1,6 +1,5 @@
 from django.conf import settings
 from django.contrib.auth.tokens import default_token_generator
-from django.core.exceptions import ValidationError
 from django.core.mail import send_mail
 from django.shortcuts import get_object_or_404
 from rest_framework import filters, status, views, viewsets
@@ -48,17 +47,12 @@ class SignUpView(views.APIView):
     def post(self, request):
         serializer = SingUpSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        email = serializer.data['email']
-        username = serializer.validated_data['username']
-        if serializer.data.get('confirmation_code') is None:
-            try:
-                user = MyUser.objects.create_user(
-                    email=email, username=username
-                )
-            except ValidationError as error:
-                return Response(
-                    error.detail, status=status.HTTP_400_BAD_REQUEST
-                )
+        email = request.data.get('email')
+        username = request.data.get('username')
+        user, created = MyUser.objects.get_or_create(
+            email=email,
+            defaults={'username': username}
+        )
         token = default_token_generator.make_token(user)
         user.confirmation_code = token
         user.save()
