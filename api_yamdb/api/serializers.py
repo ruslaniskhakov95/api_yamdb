@@ -13,8 +13,12 @@ class ReviewSerializer(serializers.ModelSerializer):
     )
 
     def validate(self, data):
-        author = data.get('author')
-        if Review.objects.filter(author=author).exists():
+        request = self.context['request']
+        if request.method != 'POST':
+            return data
+        author = request.user
+        title_id = self.context['view'].kwargs.get('title_id')
+        if Review.objects.filter(author=author, title=title_id).exists():
             raise validators.ValidationError('Автор уже оставил свой отзыв!')
         return data
 
@@ -103,6 +107,7 @@ class TitleSerializer(serializers.ModelSerializer):
         required=False,
         slug_field='slug',
     )
+    rating = serializers.IntegerField(read_only=True)
 
     class Meta:
         model = Title
