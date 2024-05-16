@@ -3,4 +3,16 @@ from django.contrib.auth.admin import UserAdmin
 
 from .models import MyUser
 
-admin.site.register(MyUser, UserAdmin)
+
+class MyUserAdmin(UserAdmin):
+    model = MyUser
+    fieldsets = UserAdmin.fieldsets + (
+        (None, {
+            "fields": (
+                ('role', 'confirmation_code')
+            ),
+        }),
+    )
+
+
+admin.site.register(MyUser, MyUserAdmin)
