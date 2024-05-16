@@ -42,9 +42,9 @@ class SingUpSerializer(serializers.ModelSerializer):
         elif MyUser.objects.filter(username=username).exists():
             raise ValidationError(
                 'Пользователь с таким именем уже существует'
-                )
+            )
         elif MyUser.objects.filter(email=email).exists():
             raise ValidationError(
                 'Пользователь с такой почтой уже существует'
-                )
+            )
         return data
