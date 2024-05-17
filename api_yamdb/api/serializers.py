@@ -2,7 +2,7 @@ from rest_framework import serializers, validators
 from django.shortcuts import get_object_or_404
 
 from reviews.constants import (MAX_NAME_LENGTH, MAX_SLUG_LENGTH,
-                                MIN_SCORE, MAX_SCORE)
+                               MIN_SCORE, MAX_SCORE)
 from reviews.models import Category, Comment, Genre, Review, Title
 from reviews.validators import validate_year
 
