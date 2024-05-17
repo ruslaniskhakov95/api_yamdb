@@ -4,7 +4,7 @@ from rest_framework.mixins import (CreateModelMixin,
                                    ListModelMixin)
 from rest_framework.viewsets import GenericViewSet
 
-from api.permissions import IsAdminOrReadOnly
+from users.permissions import IsAdminOrReadOnly
 
 
 class CategoryGengeMixin(

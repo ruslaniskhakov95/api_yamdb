@@ -1,7 +1,7 @@
 from rest_framework import permissions
 
 
-class IsOwnerOrReadOnly(permissions.BasePermission):
+class IsAuthorModeratorAdminOrReadOnly(permissions.BasePermission):
     """Доступ для авторов, модераторов и админов."""
     def has_permission(self, request, view):
         return (
@@ -14,15 +14,6 @@ class IsOwnerOrReadOnly(permissions.BasePermission):
                 or obj.author == request.user
                 or request.user.is_moderator
                 or request.user.is_admin)
-
-
-class IsModeratorOrAdminOrSuperUser(permissions.BasePermission):
-    """Доступ для админа, модератора или суперюзера."""
-    def has_permission(self, request, view):
-        if request.user.is_authenticated:
-            return (request.user.is_admin
-                    or request.user.is_superuser
-                    or request.user.is_moderator)
 
 
 class IsAdmin(permissions.BasePermission):
