@@ -1,14 +1,14 @@
 from rest_framework import serializers
 from rest_framework.validators import ValidationError
 
-from .models import MyUser
+from .models import User
 from .validators import username_validator
 
 
 class CustomUserSerializer(serializers.ModelSerializer):
 
     class Meta:
-        model = MyUser
+        model = User
         fields = (
             'username', 'email', 'first_name',
             'last_name', 'bio', 'role'
@@ -21,7 +21,7 @@ class GetTokenSerializer(serializers.ModelSerializer):
     confirmation_code = serializers.CharField(required=True)
 
     class Meta:
-        model = MyUser
+        model = User
         fields = ('username', 'confirmation_code')
 
 
@@ -31,19 +31,19 @@ class SingUpSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(max_length=254, required=True,)
 
     class Meta:
-        model = MyUser
+        model = User
         fields = ('username', 'email')
 
     def validate(self, data):
         username = data.get('username')
         email = data.get('email')
-        if MyUser.objects.filter(username=username, email=email).exists():
+        if User.objects.filter(username=username, email=email).exists():
             return data
-        elif MyUser.objects.filter(username=username).exists():
+        elif User.objects.filter(username=username).exists():
             raise ValidationError(
                 'Пользователь с таким именем уже существует'
             )
-        elif MyUser.objects.filter(email=email).exists():
+        elif User.objects.filter(email=email).exists():
             raise ValidationError(
                 'Пользователь с такой почтой уже существует'
             )

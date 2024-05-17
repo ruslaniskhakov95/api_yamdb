@@ -9,7 +9,7 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 
-from .models import MyUser
+from .models import User
 from .permissions import IsAdmin
 from .serializers import (CustomUserSerializer, GetTokenSerializer,
                           SingUpSerializer)
@@ -17,7 +17,7 @@ from .serializers import (CustomUserSerializer, GetTokenSerializer,
 
 class CustomUserViewSet(viewsets.ModelViewSet):
     http_method_names = ['get', 'post', 'patch', 'delete']
-    queryset = MyUser.objects.all()
+    queryset = User.objects.all()
     serializer_class = CustomUserSerializer
     permission_classes = (IsAdmin,)
     pagination_class = LimitOffsetPagination
@@ -33,7 +33,7 @@ class CustomUserViewSet(viewsets.ModelViewSet):
         if request.method == 'GET':
             serializer = CustomUserSerializer(user)
             return Response(serializer.data, status=status.HTTP_200_OK)
-        elif request.method == 'PATCH':
+        if request.method == 'PATCH':
             serializer = CustomUserSerializer(user, data=request.data,
                                               partial=True)
             serializer.is_valid(raise_exception=True)
@@ -49,7 +49,7 @@ class SignUpView(views.APIView):
         serializer.is_valid(raise_exception=True)
         email = request.data.get('email')
         username = request.data.get('username')
-        user, created = MyUser.objects.get_or_create(
+        user, created = User.objects.get_or_create(
             email=email,
             defaults={'username': username}
         )
@@ -74,7 +74,7 @@ class GetTokenView(views.APIView):
         serializer.is_valid(raise_exception=True)
         username = serializer.validated_data.get('username')
         confirmation_code = serializer.validated_data.get('confirmation_code')
-        user = get_object_or_404(MyUser, username=username)
+        user = get_object_or_404(User, username=username)
         if confirmation_code != user.confirmation_code:
             return Response('Неверный код подтверждения',
                             status=status.HTTP_400_BAD_REQUEST)
