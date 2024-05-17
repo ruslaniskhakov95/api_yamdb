@@ -1,7 +1,9 @@
 from rest_framework import serializers, validators
+from django.shortcuts import get_object_or_404
 
-from reviews.models import Review, Category, Genre, Title, Comment
-from reviews.constants import MAX_NAME_LENGTH, MAX_SLUG_LENGTH, MIN_SCORE, MAX_SCORE
+from reviews.constants import (MAX_NAME_LENGTH, MAX_SLUG_LENGTH,
+                                MIN_SCORE, MAX_SCORE)
+from reviews.models import Category, Comment, Genre, Review, Title
 from reviews.validators import validate_year
 
 
@@ -22,7 +24,8 @@ class ReviewSerializer(serializers.ModelSerializer):
             return data
         author = request.user
         title_id = self.context['view'].kwargs.get('title_id')
-        if author.reviews.all().filter(title=title_id).exists():
+        title = get_object_or_404(Title, id=title_id)
+        if any(review.author == author for review in title.reviews.all()):
             raise validators.ValidationError('Автор уже оставил свой отзыв!')
         return data
 
