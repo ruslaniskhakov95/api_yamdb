@@ -3,7 +3,7 @@ from django.contrib.auth import get_user_model
 from django.core.validators import MinValueValidator, MaxValueValidator
 
 from reviews.constants import (
-    LIMIT_TEXT, MAX_NAME_LENGTH, MAX_SLUG_LENGTH, SCORE_MIN, SCORE_MAX
+    LIMIT_TEXT, MAX_NAME_LENGTH, MAX_SLUG_LENGTH, MIN_SCORE, MAX_SCORE
 )
 from reviews.validators import validate_year
 
@@ -143,8 +143,8 @@ class Review(BasePublicationModel):
     )
     score = models.PositiveSmallIntegerField(
         validators=[
-            MinValueValidator(SCORE_MIN),
-            MaxValueValidator(SCORE_MAX)
+            MinValueValidator(MIN_SCORE),
+            MaxValueValidator(MAX_SCORE)
         ],
         verbose_name='Оценка'
     )
