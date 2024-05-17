@@ -1,7 +1,7 @@
 from rest_framework import serializers, validators
 
 from reviews.models import Review, Category, Genre, Title, Comment
-from reviews.constants import MAX_NAME_LENGTH, MAX_SLUG_LENGTH
+from reviews.constants import MAX_NAME_LENGTH, MAX_SLUG_LENGTH, MIN_SCORE, MAX_SCORE
 from reviews.validators import validate_year
 
 
@@ -11,6 +11,10 @@ class ReviewSerializer(serializers.ModelSerializer):
         read_only=True,
         default=serializers.CurrentUserDefault()
     )
+    score = serializers.IntegerField(
+        min_value=MIN_SCORE,
+        max_value=MAX_SCORE,
+    )
 
     def validate(self, data):
         request = self.context['request']
@@ -18,7 +22,7 @@ class ReviewSerializer(serializers.ModelSerializer):
             return data
         author = request.user
         title_id = self.context['view'].kwargs.get('title_id')
-        if Review.objects.filter(author=author, title=title_id).exists():
+        if author.reviews.all().filter(title=title_id).exists():
             raise validators.ValidationError('Автор уже оставил свой отзыв!')
         return data
 
