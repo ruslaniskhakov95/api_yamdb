@@ -10,13 +10,14 @@ from reviews.models import Genre, Title, Category, Review
 from .serializers import (ReviewSerializer, GenreSerializer,
                           TitleSerializer, TitleGETSerializer,
                           CategorySerializer, CommentSerializer)
-from users.permissions import (IsOwnerOrReadOnly, IsAdminOrReadOnly)
+from users.permissions import (IsAuthorModeratorAdminOrReadOnly,
+                               IsAdminOrReadOnly)
 
 
 class ReviewViewSet(viewsets.ModelViewSet):
     serializer_class = ReviewSerializer
     pagination_class = LimitOffsetPagination
-    permission_classes = [IsOwnerOrReadOnly]
+    permission_classes = [IsAuthorModeratorAdminOrReadOnly]
     http_method_names = ['get', 'post', 'patch', 'delete']
 
     def get_title(self):
@@ -38,7 +39,7 @@ class ReviewViewSet(viewsets.ModelViewSet):
 class CommentViewSet(viewsets.ModelViewSet):
     serializer_class = CommentSerializer
     pagination_class = LimitOffsetPagination
-    permission_classes = [IsOwnerOrReadOnly]
+    permission_classes = [IsAuthorModeratorAdminOrReadOnly]
     http_method_names = ['get', 'post', 'patch', 'delete']
 
     def get_review(self):
